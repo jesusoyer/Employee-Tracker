@@ -17,7 +17,7 @@ const db = mysql.createConnection(
     console.log('connected to work_db')
 );
 
-db.query('SELECT * FROM department' function(err, results){
+db.query('SELECT * FROM department', function(err, results){
     console.log(results)
 })
 

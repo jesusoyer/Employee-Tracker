@@ -82,15 +82,103 @@ function startApp(){inquirer.prompt([
 
       } else if (answers.work_directory === "Add Employee"){
           addEmployee();
-      }
+      } else if(answers.work_directory === "Add Role"){
+          addRole();
+      }else if(answers.work_directory === "Add Department"){
+        addDepartment();
+    } else if(answers.work_directory === "Update Employee Role")
+    updateEmployeeRole();
   })
 }
 
 
-function addEmployee(){inquirer.prompt([
-    
-  
+function updateEmployeeRole(){inquirer.prompt([
+    {
+      type: 'input',
+      name: 'roleID',
+      message: 'What is the role ID that you would like to change employee to?',
+    }, {
+        type: 'input',
+        name: 'employeeID',
+        message: 'What is the employees ID?',
+      },
+]).then((answers) => {
+    console.log(answers)
+    db.query(`UPDATE employee SET role_ID = ${answers.roleID} where id = ${answers.employeeID};`, function(err, results){
+        
+        console.table(results)
+        startApp();
+     })
 
+})
+
+}
+
+function addDepartment(){inquirer.prompt([
+    {
+      type: 'input',
+      name: 'newDepartment',
+      message: 'What is the name of the department you would like to add?',
+    },
+]).then((answers) => {
+    console.log(answers)
+    db.query(`INSERT INTO department (name) VALUES ("${answers.newDepartment}");`, function(err, results){
+        
+        console.table(results)
+        startApp();
+     })
+
+})
+}
+
+
+
+
+
+
+
+
+
+
+
+function addRole(){inquirer.prompt([
+    {
+      type: 'input',
+      name: 'newTitle',
+      message: 'What is the title of the role you would like to add?',
+    }, {
+        type: 'input',
+        name: 'titleSalary',
+        message: 'What is the salaray of the title?',
+      },{
+        type: 'input',
+        name: 'departmentID',
+        message: 'What is the department ID?',
+      },
+]).then((answers) => {
+    console.log(answers)
+    db.query(`INSERT INTO role (title, salary, department_id) VALUES ("${answers.newTitle}", "${answers.titleSalary}", "${answers.departmentID}");`, function(err, results){
+        
+        console.table(results)
+        startApp();
+     })
+
+})
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function addEmployee(){inquirer.prompt([
     {
       type: 'input',
       name: 'firstName',

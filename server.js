@@ -105,10 +105,16 @@ function addEmployee(){inquirer.prompt([
         name: 'roleID',
         message: 'What is the employees role ID?',
       },
+      {
+        type: 'input',
+        name: 'managerID',
+        message: 'What is the employees manager ID?',
+      },
   ])
   .then((answers) => {
     console.log(answers)
-    db.query(`INSERT INTO employee (first_name,last_name,role_ID) VALUES (${answers.firstName}, ${answers.lastName}, ${answers.roleID});`, function(err, results){
+    db.query(`INSERT INTO employee (first_name,last_name,role_ID,manager_ID) VALUES ("${answers.firstName}", "${answers.lastName}", "${answers.roleID}","${answers.managerID}");`, function(err, results){
+        
         console.table(results)
         startApp();
      })

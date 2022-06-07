@@ -67,17 +67,59 @@ function startApp(){inquirer.prompt([
     if(answers.work_directory==="View All Roles"){
         db.query('SELECT * FROM role', function(err, results){
      console.table(results)
+     startApp();
   })
       } else if(answers.work_directory === "View All Departments"){
         db.query('SELECT * FROM department', function(err, results){
             console.table(results)
+            startApp();
          })
       } else if(answers.work_directory === "View All Employees"){
-        db.query('SELECT * FROM employee', function(err, results){
+        db.query('SELECT employee.ID, employee.first_name, employee.last_name, role.title, department.name, role.salary, employee.manager_ID from department join role on department.ID = role.department_ID join employee on role.ID = employee.role_ID;', function(err, results){
             console.table(results)
+            startApp();
          })
 
+      } else if (answers.work_directory === "Add Employee"){
+          addEmployee();
       }
   })
 }
+
+
+function addEmployee(){inquirer.prompt([
+    
+  
+
+    {
+      type: 'input',
+      name: 'firstName',
+      message: 'What is the employees first name?',
+    }, {
+        type: 'input',
+        name: 'lastName',
+        message: 'What is the employees last name?',
+      },
+      {
+        type: 'input',
+        name: 'roleID',
+        message: 'What is the employees role ID?',
+      },
+  ])
+  .then((answers) => {
+    console.log(answers)
+    db.query(`INSERT INTO employee (first_name,last_name,role_ID) VALUES (${answers.firstName}, ${answers.lastName}, ${answers.roleID});`, function(err, results){
+        console.table(results)
+        startApp();
+     })
+
+}
+    
+    )}
+
+
+
+
+
+
     startApp();

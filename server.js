@@ -1,6 +1,5 @@
 const express = require('express');
 const mysql = require('mysql2')
-const inquirer = require('inquirer')
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -20,27 +19,10 @@ const db = mysql.createConnection(
 
 
 
-
-// db.query('SELECT * FROM department', function(err, results){
-//     console.log(results)
-// })
-
-// db.query('SELECT * FROM role', function(err, results){
-//     console.log(results)
-// })
-// db.query('SELECT * FROM employee', function(err, results){
-//     console.log(results)
-// })
-// db.query('SHOW TABLES', function(err, results){
-//     console.log(results)
-// })
-
-
 app.listen(PORT, ()=> {
      console.log(`server running on port ${PORT}`)
     
 })
-
 
 function startApp(){inquirer.prompt([
     
@@ -50,15 +32,11 @@ function startApp(){inquirer.prompt([
       name: 'work_directory',
       message: 'What would you like to do?',
       default: 'none',
-      choices: [{key:"1" ,value:"View All Employees"},{key:2, value:"Add Employee"},{key:3,value:"Update Employee Role"},{key:4, value:"View All Roles"},{key:5, value:"Add Role"}, {key:6, value:"View All Departments"},{key:7, value:"Add Department"},{key:8, value:"Quit"}
+      choices: [{key:"1" ,value:"View All Employees"},{key:2, value:"Add Employee"},{key:3,value:"Update Employee Role"},{key:4, value:"View All Roles"},{key:5, value:"Add Role"}, {key:6, value:"View All Departments"},{key:7, value:"Add Department"},{key:8, value:"Delete Employee"},{key:9, value:"Quit"}
         
       ],
     },
-    // {
-    //   type: 'input',
-    //   name: 'features',
-    //   message: 'What features does your project have?',
-    // },
+    
    
   ])
   
@@ -86,10 +64,37 @@ function startApp(){inquirer.prompt([
           addRole();
       }else if(answers.work_directory === "Add Department"){
         addDepartment();
-    } else if(answers.work_directory === "Update Employee Role")
+    } else if(answers.work_directory === "Update Employee Role"){
     updateEmployeeRole();
+    } else if(answers.work_directory === "Delete Employee"){
+        deleteEmployee();
+    }
   })
 }
+
+function deleteEmployee(){    
+    
+    inquirer.prompt([
+    {
+      type: 'input',
+      name: 'deleteEmployee',
+      message: 'What is the ID of the employee you would like to delete?',
+    }, 
+]).then((answers) => {
+    console.log(answers)
+    db.query(`DELETE FROM employee WHERE ID = ${answers.deleteEmployee};`, function(err, results){
+        
+        console.table(results)
+        console.log("Employee successfully deleted!")
+        startApp();
+     })
+
+})
+
+    
+}
+
+
 
 
 function updateEmployeeRole(){inquirer.prompt([
@@ -131,16 +136,6 @@ function addDepartment(){inquirer.prompt([
 })
 }
 
-
-
-
-
-
-
-
-
-
-
 function addRole(){inquirer.prompt([
     {
       type: 'input',
@@ -166,16 +161,6 @@ function addRole(){inquirer.prompt([
 })
 
 }
-
-
-
-
-
-
-
-
-
-
 
 
 function addEmployee(){inquirer.prompt([

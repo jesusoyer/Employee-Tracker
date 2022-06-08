@@ -9,8 +9,7 @@ to connect to sql and do commands that alter the tables in the database.
 
 
 ## Usage
-
-
+(https://drive.google.com/file/d/1u59rX_beUJnd8lNLETq0_FvlCDI2VweG/view)
 
 ## Credits
 Inquirer package

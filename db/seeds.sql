@@ -1,5 +1,5 @@
 
-INSERT INTO department (id,name)
+INSERT INTO department (department_id,name)
 VALUES
     (1,"recieving"),
     (2,"cashier"),

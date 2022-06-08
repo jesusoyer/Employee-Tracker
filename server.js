@@ -1,6 +1,7 @@
 const express = require('express');
-const mysql = require('mysql2')
-const inquirer = require('inquirer')
+const mysql = require('mysql2');
+const inquirer = require('inquirer');
+const figlet = require('figlet');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -25,7 +26,25 @@ app.listen(PORT, ()=> {
     
 })
 
-function startApp(){inquirer.prompt([
+figlet('Employee Manager', function(err, data) {
+    if (err) {
+        console.log('Something went wrong...');
+        console.dir(err);
+        return;
+    }
+    console.log(data)
+    startApp();
+});
+
+
+
+
+function startApp(){
+    
+    
+    
+    
+    inquirer.prompt([
     
   
     {
@@ -54,7 +73,7 @@ function startApp(){inquirer.prompt([
             startApp();
          })
       } else if(answers.work_directory === "View All Employees"){
-        db.query('SELECT employee.ID, employee.first_name, employee.last_name, role.title, department.name, role.salary, employee.manager_ID from department join role on department.ID = role.department_ID join employee on role.ID = employee.role_ID;', function(err, results){
+        db.query('SELECT employee.employee_ID, employee.first_name, employee.last_name,role.role_ID, role.title, department.department_ID, department.name, role.salary, employee.manager_ID from department join role on department.department_ID = role.department_ID join employee on role.role_ID = employee.role_ID;', function(err, results){
             console.table(results)
             startApp();
          })
@@ -69,6 +88,9 @@ function startApp(){inquirer.prompt([
     updateEmployeeRole();
     } else if(answers.work_directory === "Delete Employee"){
         deleteEmployee();
+    } else if(answers.work_directory === "Quit"){
+        console.log("Goodbye!")
+        process.exit();
     }
   })
 }
@@ -83,7 +105,7 @@ function deleteEmployee(){
     }, 
 ]).then((answers) => {
     console.log(answers)
-    db.query(`DELETE FROM employee WHERE ID = ${answers.deleteEmployee};`, function(err, results){
+    db.query(`DELETE FROM employee WHERE employee_ID = ${answers.deleteEmployee};`, function(err, results){
         
         console.table(results)
         console.log("Employee successfully deleted!")
@@ -110,7 +132,7 @@ function updateEmployeeRole(){inquirer.prompt([
       },
 ]).then((answers) => {
     console.log(answers)
-    db.query(`UPDATE employee SET role_ID = ${answers.roleID} where id = ${answers.employeeID};`, function(err, results){
+    db.query(`UPDATE employee SET role_ID = ${answers.roleID} where employee_id = ${answers.employeeID};`, function(err, results){
         
         console.table(results)
         startApp();
@@ -145,7 +167,7 @@ function addRole(){inquirer.prompt([
     }, {
         type: 'input',
         name: 'titleSalary',
-        message: 'What is the salaray of the title?',
+        message: 'What is the salary of the title?',
       },{
         type: 'input',
         name: 'departmentID',
@@ -182,7 +204,7 @@ function addEmployee(){inquirer.prompt([
       {
         type: 'input',
         name: 'managerID',
-        message: 'What is the employees manager ID?',
+        message: 'What is the employees manager ID? 31 or 32',
       },
   ])
   .then((answers) => {
@@ -202,4 +224,4 @@ function addEmployee(){inquirer.prompt([
 
 
 
-    startApp();
+   
